@@ -54,12 +54,12 @@ class KnightPathFinder
 
     def find_path(end_pos)
         result = @root_node.dfs(end_pos)
-        result.trace_path_back
+        trace_path_back(result)
     end
 
-    def trace_path_back 
-        path = []
-        previous_pos = self
+    def trace_path_back(end_pos)
+        path = [end_pos.value]
+        previous_pos = end_pos
 
         until previous_pos.parent.nil?
             path.unshift(previous_pos.parent.value) # return back to start pos
