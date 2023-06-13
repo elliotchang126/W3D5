@@ -36,20 +36,20 @@ class KnightPathFinder
     end
 
     def build_move_tree
-        que = [@root_node]
+        queue = [@root_node]
         
-        until que.empty?
-            ele = que.shift
+        until queue.empty?
+            ele = queue.shift
 
             possible_moves = new_move_positions(ele.value)
             new_nodes = possible_moves.map {|pos| PolyTreeNode.new(pos)}
             new_nodes.each {|node| ele.add_child(node)}
 
             ele.children.each do |child|
-                que << child 
+                queue << child 
             end
         end
-        que
+        queue
     end
 
     def find_path(end_pos)
@@ -64,13 +64,9 @@ class KnightPathFinder
         until previous_pos.parent.nil?
             path.unshift(previous_pos.parent.value) # return back to start pos
             previous_pos = previous_pos.parent 
-
         end
-
-        path
-    
+        path   
     end
-
 end
 
 #   @kpf = KnightPathFinder.new(pos)
