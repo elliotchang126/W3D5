@@ -18,11 +18,13 @@ class KnightPathFinder
 
     
 
-    attr_reader :position, :considered_positions
+    attr_reader :position, :considered_positions, :root_node
 
     def initialize(pos)
         @position = pos     #starting position 
         @considered_positions = [pos] 
+        @root_node = PolyTreeNode.new(@position)
+        build_move_tree
 
         # @board = Array.new(8){Array.new(8,"_")} 
     end
@@ -34,27 +36,37 @@ class KnightPathFinder
     end
 
     def build_move_tree
-        root_node = PolyTreeNode.new(@position)
-
-        que = [root_node]
+        queue = [@root_node]
         
-        until que.empty?
-            ele = que.shift
+        until queue.empty?
+            ele = queue.shift
 
             possible_moves = new_move_positions(ele.value)
             new_nodes = possible_moves.map {|pos| PolyTreeNode.new(pos)}
             new_nodes.each {|node| ele.add_child(node)}
 
             ele.children.each do |child|
-                que << child 
+                queue << child 
             end
         end
-        que
+        queue
     end
 
+    def find_path(end_pos)
+        result = @root_node.dfs(end_pos)
+        trace_path_back(result)
+    end
 
+    def trace_path_back(end_pos)
+        path = [end_pos.value]
+        previous_pos = end_pos
 
-
+        until previous_pos.parent.nil?
+            path.unshift(previous_pos.parent.value) # return back to start pos
+            previous_pos = previous_pos.parent 
+        end
+        path   
+    end
 end
 
 #   @kpf = KnightPathFinder.new(pos)
